@@ -1,49 +1,33 @@
 import { buildJsonLd } from "@/lib/schema";
 import { Header } from "@/components/Header";
-import { ScrollProgress } from "@/components/ui/ScrollProgress";
-import { MobileCta } from "@/components/ui/MobileCta";
 import { Hero } from "@/components/sections/Hero";
-import { ClientJourney } from "@/components/sections/ClientJourney";
-import { VisibilityDashboard } from "@/components/sections/VisibilityDashboard";
-import { SearchIntelligence } from "@/components/sections/SearchIntelligence";
-import { Competition } from "@/components/sections/Competition";
-import { LegalGrowthSystem } from "@/components/sections/LegalGrowthSystem";
-import { Specialties } from "@/components/sections/Specialties";
-import { OpportunityMap } from "@/components/sections/OpportunityMap";
-import { GrowthMethod } from "@/components/sections/GrowthMethod";
-import { Role } from "@/components/sections/Role";
-import { DemonstrationReport } from "@/components/sections/DemonstrationReport";
-import { WhatWeLook } from "@/components/sections/WhatWeLook";
-import { FounderSection } from "@/components/sections/FounderSection";
-import { FinalCta } from "@/components/sections/FinalCta";
-import { Faq } from "@/components/sections/Faq";
+import { Awareness } from "@/components/sections/Awareness";
+import { Problem } from "@/components/sections/Problem";
+import { Approach } from "@/components/sections/Approach";
+import { LookFor } from "@/components/sections/LookFor";
+import { Demo } from "@/components/sections/Demo";
+import { System } from "@/components/sections/System";
+import { Founder } from "@/components/sections/Founder";
+import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd()) }} />
-      <ScrollProgress />
       <Header />
       <main id="contenu">
         <Hero />
-        <ClientJourney />
-        <VisibilityDashboard />
-        <SearchIntelligence />
-        <Competition />
-        <LegalGrowthSystem />
-        <Specialties />
-        <OpportunityMap />
-        <GrowthMethod />
-        <Role />
-        <DemonstrationReport />
-        <WhatWeLook />
-        <FounderSection />
-        <FinalCta />
-        <Faq />
+        <Awareness />
+        <Problem />
+        <Approach />
+        <LookFor />
+        <Demo />
+        <System />
+        <Founder />
+        <Contact />
       </main>
       <Footer />
-      <MobileCta />
     </>
   );
 }

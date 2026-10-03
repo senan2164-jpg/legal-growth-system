@@ -1,5 +1,5 @@
 import { site } from "./site";
-import { faqs, systemModules } from "./content";
+import { pillars } from "./content";
 
 /** Données structurées : uniquement des informations vraies et vérifiables. */
 export function buildJsonLd() {
@@ -27,7 +27,7 @@ export function buildJsonLd() {
         logo: `${site.url}/logo.svg`,
         founder: { "@id": founder },
         description:
-          "Méthode d'analyse et de croissance digitale conçue pour les cabinets d'avocats : visibilité, acquisition, conversion, automatisation et pilotage.",
+          "Méthode d'analyse et de croissance digitale conçue pour les cabinets d'avocats : visibilité, acquisition, conversion et suivi.",
         areaServed: { "@type": "Country", name: "France" },
         knowsAbout: [
           "Marketing digital pour cabinets d'avocats",
@@ -58,21 +58,12 @@ export function buildJsonLd() {
         areaServed: { "@type": "Country", name: "France" },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
-          name: "Les cinq dimensions de Legal Growth System",
-          itemListElement: systemModules.map((m) => ({
+          name: "Les quatre volets de Legal Growth System",
+          itemListElement: pillars.map((p) => ({
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: m.fr, description: m.desc },
+            itemOffered: { "@type": "Service", name: p.name, description: p.line },
           })),
         },
-      },
-      {
-        "@type": "FAQPage",
-        "@id": `${site.url}/#faq`,
-        mainEntity: faqs.map((f) => ({
-          "@type": "Question",
-          name: f.q,
-          acceptedAnswer: { "@type": "Answer", text: f.a },
-        })),
       },
     ],
   };

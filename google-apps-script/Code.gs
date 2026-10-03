@@ -47,7 +47,16 @@ function doPost(e) {
       console.error(mailError);
     }
 
-    return reply_({ ok: true, mail: mailSent });
+    // Accusé de réception au prospect. Même règle : un échec n'annule pas la demande.
+    var confirmSent = true;
+    try {
+      sendConfirmation_(lead);
+    } catch (confirmError) {
+      confirmSent = false;
+      console.error(confirmError);
+    }
+
+    return reply_({ ok: true, mail: mailSent, confirmation: confirmSent });
   } catch (err) {
     console.error(err);
     return reply_({ ok: false, error: String(err) });
@@ -77,6 +86,28 @@ function sendNotification_(lead, date) {
   var options = { name: 'Legal Growth System' };
   if (lead.email) options.replyTo = lead.email;
   MailApp.sendEmail(to, 'Nouvelle demande d\'analyse — Legal Growth System', lines.join('\n'), options);
+}
+
+function sendConfirmation_(lead) {
+  if (!lead.email) return;
+  var replyTo = PropertiesService.getScriptProperties().getProperty('NOTIFICATION_EMAIL');
+  var lines = [
+    'Bonjour ' + (lead.prenom || '') + ',',
+    '',
+    'Votre demande d'analyse pour ' + (lead.cabinet || 'votre cabinet') + ' est bien arrivée.',
+    '',
+    'Je vais regarder votre cabinet comme le ferait un prospect : comment il est trouvé, comparé, puis contacté.',
+    'Je reviens vers vous par email avec ce que j'ai observé.',
+    '',
+    'Vous pouvez répondre directement à ce message.',
+    '',
+    'Amos HOUNTONDJI',
+    'Legal Growth System'
+  ];
+  var options = { name: 'Amos HOUNTONDJI · Legal Growth System' };
+  if (replyTo) options.replyTo = replyTo;
+  MailApp.sendEmail(lead.email, 'Votre demande d'analyse est bien reçue', lines.join('
+'), options);
 }
 
 function getSheet_() {

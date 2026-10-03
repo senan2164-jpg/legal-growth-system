@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { specialtyOptions } from "@/lib/content";
-import { EMAIL_PATTERN, LAWYER_COUNTS, normalizeUrl } from "@/lib/lead";
+import { EMAIL_PATTERN, normalizeUrl } from "@/lib/lead";
 import { site } from "@/lib/site";
 
 type Fields = {
@@ -14,12 +14,11 @@ type Fields = {
   ville: string;
   specialite: string;
   site: string;
-  taille: string;
 };
 type FieldName = keyof Fields;
 type Status = "idle" | "sending" | "sent" | "error";
 
-const EMPTY: Fields = { prenom: "", nom: "", cabinet: "", email: "", telephone: "", ville: "", specialite: "", site: "", taille: "" };
+const EMPTY: Fields = { prenom: "", nom: "", cabinet: "", email: "", telephone: "", ville: "", specialite: "", site: "" };
 
 const MESSAGES: Partial<Record<FieldName, string>> = {
   prenom: "Indiquez votre prénom.",
@@ -56,8 +55,6 @@ function readSource(): string {
 
 export function AnalysisRequestForm() {
   const [fields, setFields] = useState<Fields>(EMPTY);
-  const [dossiers, setDossiers] = useState<string[]>([]);
-  const [autre, setAutre] = useState("");
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
   const [serverError, setServerError] = useState("");
@@ -81,10 +78,6 @@ export function AnalysisRequestForm() {
     if (errors[name]) setErrors((e) => ({ ...e, [name]: undefined }));
   }
 
-  function toggle(value: string) {
-    setDossiers((d) => (d.includes(value) ? d.filter((x) => x !== value) : [...d, value]));
-  }
-
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "sending") return;
@@ -98,8 +91,6 @@ export function AnalysisRequestForm() {
     }
 
     const honeypot = (e.currentTarget.elements.namedItem("website_confirm") as HTMLInputElement | null)?.value ?? "";
-    const chosen = dossiers.filter((d) => d !== "Autre");
-    if (dossiers.includes("Autre")) chosen.push(autre.trim() ? `Autre : ${autre.trim().slice(0, 100)}` : "Autre");
 
     setStatus("sending");
     setServerError("");
@@ -110,7 +101,6 @@ export function AnalysisRequestForm() {
         body: JSON.stringify({
           ...fields,
           site: fields.site.trim() ? normalizeUrl(fields.site.trim()) : "",
-          dossiers: chosen,
           source: source.current,
           startedAt: startedAt.current,
           website_confirm: honeypot,
@@ -120,8 +110,6 @@ export function AnalysisRequestForm() {
       if (res.ok && json.ok) {
         setStatus("sent");
         setFields(EMPTY);
-        setDossiers([]);
-        setAutre("");
         return;
       }
       if (json.fields?.length) {
@@ -156,16 +144,13 @@ export function AnalysisRequestForm() {
   if (status === "sent") {
     return (
       <div className="rounded-[28px] border border-white/[.09] bg-night/70 p-6 shadow-console sm:p-10">
-        <div ref={sentRef} tabIndex={-1} role="status" className="flex min-h-[380px] flex-col justify-center outline-none">
+        <div ref={sentRef} tabIndex={-1} role="status" className="flex min-h-[300px] flex-col justify-center outline-none">
           <span aria-hidden="true" className="flex h-12 w-12 items-center justify-center rounded-full bg-champagne text-xl text-ink">
             ✓
           </span>
-          <h3 className="mt-6 font-serif text-[34px] leading-tight">Votre demande a bien été transmise.</h3>
+          <h3 className="mt-6 font-serif text-[34px] leading-tight">C&apos;est noté.</h3>
           <p className="mt-4 max-w-lg text-[15.5px] leading-relaxed text-ivory/75">
-            Je vais examiner les informations publiques disponibles autour de votre cabinet et de son environnement digital.
-          </p>
-          <p className="mt-3 max-w-lg text-[15.5px] leading-relaxed text-ivory/75">
-            Si votre situation se prête à une analyse pertinente, je reviendrai vers vous par email avec les premiers éléments observés.
+            Je regarde votre cabinet et je reviens vers vous par email. Une confirmation vient de vous être envoyée.
           </p>
           <p className="mt-6 text-[13px] text-ivory/45">{site.founder.displayName}</p>
         </div>
@@ -239,62 +224,13 @@ export function AnalysisRequestForm() {
           </div>
         </div>
 
-        <fieldset>
-          <legend className="field-label">Nombre approximatif d&apos;avocats</legend>
-          <div className="flex flex-wrap gap-2">
-            {LAWYER_COUNTS.map((t) => (
-              <label key={t} className="cursor-pointer">
-                <input
-                  type="radio"
-                  name="taille"
-                  value={t}
-                  checked={fields.taille === t}
-                  onChange={() => set("taille", t)}
-                  className="peer sr-only"
-                />
-                <span className="inline-flex min-h-[40px] items-center rounded-full border border-white/15 px-4 text-[13.5px] text-ivory/75 transition-colors peer-checked:border-champagne peer-checked:bg-champagne peer-checked:text-ink peer-focus-visible:ring-1 peer-focus-visible:ring-champagne">
-                  {t}
-                </span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend className="field-label">Quels types de dossiers souhaitez-vous développer ?</legend>
-          <div className="flex flex-wrap gap-2">
-            {specialtyOptions.map((s) => {
-              const on = dossiers.includes(s);
-              return (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => toggle(s)}
-                  aria-pressed={on}
-                  className={`min-h-[40px] rounded-full border px-4 text-[13.5px] transition-colors ${
-                    on ? "border-champagne bg-champagne/15 text-champagne-soft" : "border-white/15 text-ivory/70 hover:border-white/35"
-                  }`}
-                >
-                  {s}
-                </button>
-              );
-            })}
-          </div>
-          {dossiers.includes("Autre") && (
-            <div className="mt-3">
-              <label htmlFor="autre" className="sr-only">Précisez le type de dossiers</label>
-              <input id="autre" value={autre} onChange={(e) => setAutre(e.target.value)} placeholder="Précisez" maxLength={100} className="field" />
-            </div>
-          )}
-        </fieldset>
-
         {/* Champ piège anti-spam, invisible pour les visiteurs */}
         <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
           <label htmlFor="website_confirm">Ne pas remplir</label>
           <input id="website_confirm" name="website_confirm" type="text" tabIndex={-1} autoComplete="off" />
         </div>
 
-        <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="submit"
             disabled={status === "sending"}
@@ -313,8 +249,7 @@ export function AnalysisRequestForm() {
         )}
 
         <p className="border-t border-white/[.07] pt-5 text-[12.5px] leading-relaxed text-ivory/50">
-          Ces informations servent uniquement à répondre à votre demande d&apos;analyse. Elles ne sont ni revendues ni utilisées pour une
-          autre finalité. <Link href="/confidentialite" className="underline underline-offset-2 hover:text-ivory">Politique de confidentialité</Link>.
+          Vos informations servent uniquement à répondre à cette demande. <Link href="/confidentialite" className="underline underline-offset-2 hover:text-ivory">Politique de confidentialité</Link>.
         </p>
       </form>
     </div>

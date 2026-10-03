@@ -125,7 +125,7 @@ export function Header() {
                   onClick={(e) => go(e, item.href)}
                   className="flex items-baseline gap-4 py-4"
                 >
-                  <span className="w-8 font-serif text-base italic text-champagne">§ {i + 1}</span>
+                  <span className="w-6 font-serif text-base italic text-champagne">{i + 1}</span>
                   <span className="font-serif text-[34px] leading-none">{item.label}</span>
                 </a>
               </li>

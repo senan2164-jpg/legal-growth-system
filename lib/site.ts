@@ -13,7 +13,7 @@ export const site = {
   },
   title: "Legal Growth System | Croissance digitale des cabinets d'avocats",
   description:
-    "Legal Growth System est une méthode d'analyse et de croissance digitale conçue pour les cabinets d'avocats : visibilité, acquisition, conversion, automatisation et pilotage. Conçue par HOUNTONDJI AMOS.",
+    "Développer la visibilité et l'acquisition des cabinets d'avocats. Nous regardons votre cabinet comme le ferait un prospect, puis nous cherchons ce qui mérite d'être amélioré. Par HOUNTONDJI AMOS.",
   keywords: [
     "marketing digital avocat",
     "acquisition clients avocat",
@@ -28,9 +28,8 @@ export const site = {
 };
 
 export const nav = [
-  { href: "#parcours", label: "Parcours" },
-  { href: "#systeme", label: "Système" },
-  { href: "#methode", label: "Méthode" },
-  { href: "#demo", label: "Démonstration" },
-  { href: "#faq", label: "FAQ" },
+  { href: "#constat", label: "Le constat" },
+  { href: "#approche", label: "L'approche" },
+  { href: "#exemple", label: "Un exemple" },
+  { href: "#amos", label: "Qui suis-je" },
 ];

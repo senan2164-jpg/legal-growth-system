@@ -29,7 +29,7 @@ export default function OpengraphImage() {
           <span style={{ color: "#E2CE9E" }}>bien avant le premier appel.</span>
         </div>
         <div style={{ display: "flex", fontSize: 26, color: "#8E97A8" }}>
-          Visibilité, acquisition, conversion, automatisation et pilotage pour cabinets d&apos;avocats
+          Développer la visibilité et l&apos;acquisition des cabinets d&apos;avocats
         </div>
       </div>
     ),
