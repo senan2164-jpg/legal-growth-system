@@ -329,7 +329,7 @@ export function AnalysisRequestForm() {
           <button
             type="submit"
             disabled={status === "sending"}
-            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-champagne px-7 text-[15px] font-semibold text-ink transition-colors hover:bg-champagne-soft disabled:cursor-wait disabled:opacity-60"
+            className={`${status === "sending" ? "" : "cta-live"} inline-flex min-h-[52px] items-center justify-center rounded-full bg-champagne px-7 text-[15px] font-semibold text-ink transition-colors hover:bg-champagne-soft disabled:cursor-wait disabled:opacity-60`}
           >
             {status === "sending" ? "Envoi en cours…" : "Demander mon analyse"}
           </button>

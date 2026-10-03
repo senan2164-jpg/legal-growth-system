@@ -39,9 +39,6 @@ export function Demo() {
           <h2 id="exemple-titre" className="display-lg max-w-[14ch]">
             Ce que nous trouvons, <span className="text-ink/45">sur un exemple.</span>
           </h2>
-          <span className="rounded-full border border-champagne-deep/40 bg-champagne/15 px-4 py-1.5 text-[12px] font-semibold uppercase tracking-[.2em] text-champagne-deep">
-            Exemple fictif
-          </span>
         </Reveal>
 
         <div ref={ref} className="mt-16 grid items-center gap-14 md:mt-20 lg:grid-cols-[minmax(0,420px)_1fr] lg:gap-20">

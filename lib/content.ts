@@ -1,9 +1,10 @@
-/** Les quatre volets du système. */
+/** Les cinq volets du système, dans l'ordre du parcours. */
 export const pillars = [
   { name: "Visibilité", line: "Être trouvé au bon moment." },
   { name: "Acquisition", line: "Attirer les dossiers recherchés." },
   { name: "Conversion", line: "Transformer une visite en contact." },
-  { name: "Suivi", line: "Mesurer, puis ajuster." },
+  { name: "Automatisation", line: "Ne laisser aucune demande se perdre." },
+  { name: "Pilotage", line: "Mesurer, puis ajuster." },
 ];
 
 /** Domaines proposés dans le formulaire. Aussi utilisés pour valider la demande côté serveur. */

@@ -9,10 +9,18 @@ export function Footer() {
         <Logo />
         <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13.5px] text-ivory/60">
           <li>
+            <Link href="/methode" className="hover:text-ivory">Notre méthode</Link>
+          </li>
+          <li>
             <Link href="/mentions-legales" className="hover:text-ivory">Mentions légales</Link>
           </li>
           <li>
             <Link href="/confidentialite" className="hover:text-ivory">Confidentialité</Link>
+          </li>
+          <li>
+            <a href={site.founder.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-ivory">
+              LinkedIn<span className="sr-only"> (nouvel onglet)</span>
+            </a>
           </li>
           {site.email && (
             <li>

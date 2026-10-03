@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { site } from "@/lib/site";
+import { LinkedInLink } from "../ui/LinkedInLink";
 import { Reveal } from "../ui/Reveal";
 
 export function Founder() {
@@ -32,6 +33,7 @@ export function Founder() {
         <blockquote className="display-md mt-12 max-w-[22ch] italic text-ivory/90">
           « Je préfère comprendre l&apos;opportunité avant de recommander une action. »
         </blockquote>
+        <LinkedInLink className="mt-12" />
       </Reveal>
     </section>
   );

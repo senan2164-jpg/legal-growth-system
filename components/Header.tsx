@@ -1,5 +1,6 @@
 "use client";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { nav } from "@/lib/site";
 import { scrollToHash } from "@/lib/scroll";
@@ -10,6 +11,9 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const onHome = usePathname() === "/";
+  /** Hors de l'accueil, les ancres renvoient vers l'accueil. */
+  const to = (href: string) => (href.startsWith("#") && !onHome ? `/${href}` : href);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -46,14 +50,17 @@ export function Header() {
    * Le défilement est lancé à l'image suivante, une fois le verrou retiré.
    */
   const go = useCallback((e: MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (!href.startsWith("#")) return;
+    if (!href.startsWith("#") || !onHome) {
+      setOpen(false);
+      return;
+    }
     e.preventDefault();
     setOpen(false);
     document.documentElement.style.overflow = "";
     requestAnimationFrame(() => {
       if (!scrollToHash(href)) window.location.hash = href;
     });
-  }, []);
+  }, [onHome]);
 
   return (
     <>
@@ -63,7 +70,7 @@ export function Header() {
         }`}
       >
         <div className="container-x flex h-16 items-center justify-between md:h-[72px]">
-          <a href="#top" aria-label="Legal Growth System, retour en haut" className="text-ivory" onClick={(e) => go(e, "#top")}>
+          <a href={onHome ? "#top" : "/"} aria-label="Legal Growth System, retour en haut" className="text-ivory" onClick={(e) => go(e, "#top")}>
             <Logo />
           </a>
 
@@ -71,9 +78,10 @@ export function Header() {
             {nav.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={to(item.href)}
                 onClick={(e) => go(e, item.href)}
-                className="link-underline text-[13.5px] text-ivory/70 transition-colors hover:text-ivory"
+                aria-current={!onHome && item.href === "/methode" ? "page" : undefined}
+                className="link-underline text-[13.5px] text-ivory/70 transition-colors hover:text-ivory aria-[current=page]:text-ivory"
               >
                 {item.label}
               </a>
@@ -82,9 +90,9 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <a
-              href="#analyse"
+              href={to("#analyse")}
               onClick={(e) => go(e, "#analyse")}
-              className="hidden rounded-full border border-champagne/40 px-5 py-2.5 text-[13px] font-semibold text-champagne-soft transition-colors hover:bg-champagne hover:text-ink sm:inline-flex"
+              className="cta-live hidden rounded-full border border-champagne/40 px-5 py-2.5 text-[13px] font-semibold text-champagne-soft transition-colors hover:bg-champagne hover:text-ink sm:inline-flex"
             >
               Demander mon analyse
             </a>
@@ -121,7 +129,7 @@ export function Header() {
               <li key={item.href} className="border-b border-white/[.07]">
                 <a
                   ref={i === 0 ? firstLinkRef : undefined}
-                  href={item.href}
+                  href={to(item.href)}
                   onClick={(e) => go(e, item.href)}
                   className="flex items-baseline gap-4 py-4"
                 >
@@ -133,9 +141,9 @@ export function Header() {
           </ul>
         </nav>
         <a
-          href="#analyse"
+          href={to("#analyse")}
           onClick={(e) => go(e, "#analyse")}
-          className="mt-8 flex w-full items-center justify-center rounded-full bg-champagne py-4 text-[15px] font-semibold text-ink"
+          className="cta-live mt-8 flex w-full items-center justify-center rounded-full bg-champagne py-4 text-[15px] font-semibold text-ink"
         >
           Demander mon analyse
         </a>

@@ -135,6 +135,58 @@
   animation: ripple 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+/* Bouton principal : un reflet qui le traverse, un halo qui respire, une flèche qui avance. */
+@keyframes cta-shine {
+  0%,
+  55% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  85%,
+  100% {
+    transform: translateX(260%) skewX(-20deg);
+  }
+}
+@keyframes cta-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(198, 168, 108, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 9px rgba(198, 168, 108, 0);
+  }
+}
+@keyframes cta-nudge {
+  0%,
+  60%,
+  100% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+.cta-live {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  animation: cta-glow 2.8s ease-out infinite;
+}
+.cta-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  animation: cta-shine 3.6s ease-in-out infinite;
+}
+.cta-live .cta-arrow {
+  animation: cta-nudge 2.8s ease-in-out infinite;
+}
+.cta-live:hover {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

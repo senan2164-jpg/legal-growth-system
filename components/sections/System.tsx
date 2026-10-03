@@ -1,20 +1,16 @@
 "use client";
 import { motion } from "framer-motion";
+import { RotateCcw } from "lucide-react";
 import { pillars } from "@/lib/content";
 import { EASE } from "@/lib/motion";
 import { useSequence } from "@/lib/useSequence";
 import { Reveal } from "../ui/Reveal";
 
-/** Positions des quatre volets sur la boucle, dans le sens de lecture. */
-const SPOTS = [
-  { left: "0%", top: "0%" },
-  { left: "100%", top: "0%" },
-  { left: "100%", top: "100%" },
-  { left: "0%", top: "100%" },
-];
+const LOOP = "Le pilotage nourrit la visibilité.";
 
 export function System() {
-  const { ref, step } = useSequence(pillars.length, { interval: 1700, hold: 1700 });
+  const { ref, step } = useSequence(pillars.length, { interval: 1600, hold: 2400 });
+  const last = pillars.length - 1;
 
   return (
     <section id="systeme" aria-labelledby="systeme-titre" className="overflow-hidden bg-ink py-24 md:py-36">
@@ -22,55 +18,113 @@ export function System() {
         <Reveal className="text-center">
           <p className="eyebrow">Legal Growth System</p>
           <h2 id="systeme-titre" className="display-lg mx-auto mt-5 max-w-[16ch]">
-            Quatre volets <span className="text-ivory/45">qui se répondent.</span>
+            Cinq volets <span className="text-ivory/45">qui se répondent.</span>
           </h2>
         </Reveal>
 
-        <div ref={ref} className="relative mx-auto mt-20 max-w-[760px] px-[12%] py-24 md:mt-24 md:px-[14%] md:py-24">
-          {/* La boucle et le point qui la parcourt */}
-          <div className="relative aspect-[5/3]">
-            <div aria-hidden="true" className="absolute inset-0 rounded-[28px] border border-ivory/10" />
-            <motion.span
-              aria-hidden="true"
-              className="absolute z-10 -ml-[7px] -mt-[7px] h-3.5 w-3.5 rounded-full bg-champagne shadow-glow"
-              initial={false}
-              animate={SPOTS[step]}
-              transition={{ duration: 1.1, ease: EASE }}
-            />
-            <p aria-hidden="true" className="absolute inset-0 flex items-center justify-center px-4 text-center font-serif text-[18px] italic text-ivory/35 md:text-[22px]">
-              Le suivi nourrit la visibilité.
-            </p>
+        <div ref={ref} className="mx-auto mt-16 max-w-5xl md:mt-24">
+          {/* Ordinateur : une ligne, et une arche qui ramène du dernier volet au premier */}
+          <div className="relative hidden md:block">
+            <div className="relative h-28" aria-hidden="true">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                <path
+                  d="M90 100 C90 8, 10 8, 10 100"
+                  fill="none"
+                  stroke="rgba(198,168,108,.45)"
+                  strokeWidth="1"
+                  strokeDasharray="4 6"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
+              <p className="absolute inset-x-0 top-0 flex items-center justify-center gap-2 font-serif text-[19px] italic text-ivory/45">
+                <RotateCcw className="h-4 w-4 -scale-x-100" /> {LOOP}
+              </p>
+            </div>
 
-            <ol>
-              {pillars.map((p, i) => {
-                const on = i === step;
-                const right = i === 1 || i === 2;
-                const bottom = i >= 2;
-                return (
-                  <li key={p.name} className="absolute h-0 w-0" style={SPOTS[i]}>
-                    <span
-                      aria-hidden="true"
-                      className={`absolute -left-[7px] -top-[7px] h-3.5 w-3.5 rounded-full border bg-ink transition-colors duration-500 ${
-                        on ? "border-champagne" : "border-ivory/25"
-                      }`}
-                    />
-                    <div
-                      className={`absolute flex w-[150px] gap-1.5 md:w-[220px] ${right ? "-right-6 items-end text-right" : "-left-6 items-start text-left"} ${
-                        bottom ? "top-5 flex-col" : "bottom-5 flex-col-reverse"
-                      }`}
-                    >
-                      <span className={`font-serif text-[24px] leading-none transition-colors duration-500 md:text-[32px] ${on ? "text-ivory" : "text-ivory/40"}`}>
+            <div className="relative">
+              <span aria-hidden="true" className="absolute left-[10%] right-[10%] top-6 h-px bg-ivory/10" />
+              <motion.span
+                aria-hidden="true"
+                className="absolute left-[10%] top-6 h-px origin-left bg-champagne"
+                style={{ width: "80%" }}
+                initial={false}
+                animate={{ scaleX: step / last }}
+                transition={{ duration: 0.9, ease: EASE }}
+              />
+              <ol className="relative grid grid-cols-5">
+                {pillars.map((p, i) => {
+                  const on = i === step;
+                  const reached = i <= step;
+                  return (
+                    <li key={p.name} className="flex flex-col items-center px-2 text-center">
+                      <span className="relative flex h-12 w-12 items-center justify-center">
+                        {on && <span aria-hidden="true" className="ripple absolute inset-0 rounded-full border border-champagne" />}
+                        <span
+                          className={`relative flex h-full w-full items-center justify-center rounded-full border font-serif text-[18px] transition-colors duration-500 ${
+                            reached ? "border-champagne bg-champagne text-ink" : "border-ivory/20 bg-ink text-ivory/40"
+                          }`}
+                        >
+                          {i + 1}
+                        </span>
+                      </span>
+                      <span className={`mt-6 font-serif text-[24px] leading-none transition-colors duration-500 lg:text-[30px] ${reached ? "text-ivory" : "text-ivory/40"}`}>
                         {p.name}
                       </span>
-                      <span className={`text-[12.5px] leading-snug transition-colors duration-500 md:text-[14px] ${on ? "text-fog" : "text-ivory/25"}`}>
+                      <span className={`mt-3 max-w-[13rem] text-[14px] leading-snug transition-colors duration-500 ${on ? "text-fog" : "text-ivory/30"}`}>
                         {p.line}
                       </span>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
           </div>
+
+          {/* Mobile : une colonne, puis le retour au début */}
+          <ol className="md:hidden">
+            {pillars.map((p, i) => {
+              const on = i === step;
+              const reached = i <= step;
+              return (
+                <li key={p.name} className="relative flex items-start gap-5 pb-9 last:pb-0">
+                  {i < last && (
+                    <span aria-hidden="true" className="absolute left-[21px] top-11 h-[calc(100%-44px)] w-px bg-ivory/10">
+                      <span className={`absolute inset-0 origin-top bg-champagne transition-transform duration-700 ${i < step ? "scale-y-100" : "scale-y-0"}`} />
+                    </span>
+                  )}
+                  <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
+                    {on && <span aria-hidden="true" className="ripple absolute inset-0 rounded-full border border-champagne" />}
+                    <span
+                      className={`relative flex h-full w-full items-center justify-center rounded-full border font-serif text-[17px] transition-colors duration-500 ${
+                        reached ? "border-champagne bg-champagne text-ink" : "border-ivory/20 bg-ink text-ivory/40"
+                      }`}
+                    >
+                      {i + 1}
+                    </span>
+                  </span>
+                  <div className="pt-1">
+                    <p className={`font-serif text-[26px] leading-none transition-colors duration-500 ${reached ? "text-ivory" : "text-ivory/40"}`}>{p.name}</p>
+                    <p className={`mt-2 text-[14px] leading-snug transition-colors duration-500 ${on ? "text-fog" : "text-ivory/35"}`}>{p.line}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-8 flex items-center gap-2 font-serif text-[18px] italic text-ivory/45 md:hidden">
+            <RotateCcw aria-hidden="true" className="h-4 w-4 -scale-x-100" /> {LOOP}
+          </p>
+        </div>
+
+        <div className="mt-16 text-center md:mt-20">
+          <a
+            href="/methode"
+            className="group inline-flex items-center gap-3 text-[15px] font-semibold text-ivory underline decoration-champagne/60 underline-offset-[6px] hover:decoration-ivory"
+          >
+            Voir la méthode en détail
+            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
+          </a>
         </div>
       </div>
     </section>

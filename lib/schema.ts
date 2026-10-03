@@ -18,6 +18,7 @@ export function buildJsonLd() {
         familyName: site.founder.familyName,
         jobTitle: site.founder.role,
         ...(site.founder.photo ? { image: `${site.url}${site.founder.photo}` } : {}),
+        sameAs: [site.founder.linkedin],
         worksFor: { "@id": org },
       },
       {
@@ -29,7 +30,7 @@ export function buildJsonLd() {
         logo: `${site.url}/logo.svg`,
         founder: { "@id": founder },
         description:
-          "Méthode d'analyse et de croissance digitale conçue pour les cabinets d'avocats : visibilité, acquisition, conversion et suivi.",
+          "Méthode d'analyse et de croissance digitale conçue pour les cabinets d'avocats : visibilité, acquisition, conversion, automatisation et pilotage.",
         areaServed: countries.map((c) => ({ "@type": "Country", name: c.name })),
         knowsAbout: [
           "Marketing digital pour cabinets d'avocats",
@@ -60,7 +61,7 @@ export function buildJsonLd() {
         areaServed: countries.map((c) => ({ "@type": "Country", name: c.name })),
         hasOfferCatalog: {
           "@type": "OfferCatalog",
-          name: "Les quatre volets de Legal Growth System",
+          name: "Les cinq volets de Legal Growth System",
           itemListElement: pillars.map((p) => ({
             "@type": "Offer",
             itemOffered: { "@type": "Service", name: p.name, description: p.line },

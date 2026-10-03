@@ -1,3 +1,4 @@
+import { LinkedInLink } from "../ui/LinkedInLink";
 import { Reveal } from "../ui/Reveal";
 import { AnalysisRequestForm } from "./AnalysisRequestForm";
 
@@ -18,6 +19,10 @@ export function Contact() {
         <div id="analyse" className="mx-auto mt-16 max-w-2xl md:mt-20">
           <AnalysisRequestForm />
           <p className="mt-5 text-center text-[13px] text-ivory/45">Réponse personnelle par email, sans engagement. Dans le respect des règles de votre barreau.</p>
+          <div className="mt-8 flex flex-col items-center gap-3 border-t border-white/[.07] pt-8">
+            <p className="text-[13px] text-ivory/45">Vous préférez en parler d&apos;abord ?</p>
+            <LinkedInLink tone="link" />
+          </div>
         </div>
       </div>
     </section>

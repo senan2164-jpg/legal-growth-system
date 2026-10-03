@@ -12,6 +12,7 @@ export const site = {
     role: "Consultant en stratégie de croissance digitale et acquisition",
     /** Photo de profil, placée dans /public. `null` : le monogramme « HA » est affiché à la place. */
     photo: "/amos.jpg" as string | null,
+    linkedin: "https://www.linkedin.com/in/amos-fructueux",
   },
   title: "Legal Growth System | Croissance digitale des cabinets d'avocats",
   description:
@@ -37,4 +38,5 @@ export const nav = [
   { href: "#approche", label: "L'approche" },
   { href: "#exemple", label: "Un exemple" },
   { href: "#amos", label: "Qui suis-je" },
+  { href: "/methode", label: "Notre méthode" },
 ];
