@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, JetBrains_Mono, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { site } from "@/lib/site";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
@@ -12,7 +12,7 @@ const serif = Cormorant_Garamond({
   display: "swap",
 });
 const sans = Manrope({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -42,7 +42,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="fr" className={`${serif.variable} ${sans.variable}`}>
       <body>
         <a
           href="#contenu"
