@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { specialtyOptions } from "@/lib/content";
-import { EMAIL_PATTERN, normalizeUrl } from "@/lib/lead";
+import { OTHER_COUNTRY, countries, dialFor } from "@/lib/countries";
+import { EMAIL_PATTERN, NO_SITE, OTHER_PREFIX, normalizeUrl } from "@/lib/lead";
 import { site } from "@/lib/site";
 
 type Fields = {
@@ -12,13 +13,15 @@ type Fields = {
   email: string;
   telephone: string;
   ville: string;
+  pays: string;
   specialite: string;
+  autreDomaine: string;
   site: string;
 };
 type FieldName = keyof Fields;
 type Status = "idle" | "sending" | "sent" | "error";
 
-const EMPTY: Fields = { prenom: "", nom: "", cabinet: "", email: "", telephone: "", ville: "", specialite: "", site: "" };
+const EMPTY: Fields = { prenom: "", nom: "", cabinet: "", email: "", telephone: "", ville: "", pays: "", specialite: "", autreDomaine: "", site: "" };
 
 const MESSAGES: Partial<Record<FieldName, string>> = {
   prenom: "Indiquez votre prénom.",
@@ -26,17 +29,32 @@ const MESSAGES: Partial<Record<FieldName, string>> = {
   cabinet: "Indiquez le nom du cabinet.",
   email: "Indiquez une adresse email valide.",
   ville: "Indiquez la ville du cabinet.",
-  specialite: "Choisissez une spécialité.",
+  pays: "Choisissez le pays du cabinet.",
+  specialite: "Choisissez un domaine.",
+  autreDomaine: "Précisez votre domaine.",
   site: "Cette adresse de site ne semble pas valide.",
 };
 
-function validate(f: Fields): Partial<Record<FieldName, string>> {
+function validate(f: Fields, noSite: boolean): Partial<Record<FieldName, string>> {
   const e: Partial<Record<FieldName, string>> = {};
-  for (const k of ["prenom", "nom", "cabinet", "ville", "specialite"] as const) if (!f[k].trim()) e[k] = MESSAGES[k];
+  for (const k of ["prenom", "nom", "cabinet", "pays", "ville", "specialite"] as const) if (!f[k].trim()) e[k] = MESSAGES[k];
   if (!EMAIL_PATTERN.test(f.email.trim())) e.email = MESSAGES.email;
-  if (f.site.trim() && normalizeUrl(f.site.trim()) === null) e.site = MESSAGES.site;
+  if (f.specialite === "Autre" && !f.autreDomaine.trim()) e.autreDomaine = MESSAGES.autreDomaine;
+  if (!noSite && f.site.trim() && normalizeUrl(f.site.trim()) === null) e.site = MESSAGES.site;
   return e;
 }
+
+/** Indicatif + numéro. Un numéro déjà saisi avec son « + » est gardé tel quel. */
+function fullPhone(dial: string, number: string): string {
+  const n = number.trim();
+  if (!n) return "";
+  if (n.startsWith("+")) return n;
+  const d = dial.trim();
+  return d && d !== "+" ? `${d} ${n}` : n;
+}
+
+const AFRIQUE = countries.filter((c) => c.region === "Afrique");
+const EUROPE = countries.filter((c) => c.region === "Europe");
 
 /** Source de la visite : paramètres utm ou ref de l'URL, sinon site référent. */
 function readSource(): string {
@@ -55,6 +73,8 @@ function readSource(): string {
 
 export function AnalysisRequestForm() {
   const [fields, setFields] = useState<Fields>(EMPTY);
+  const [dial, setDial] = useState("+");
+  const [noSite, setNoSite] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
   const [serverError, setServerError] = useState("");
@@ -78,11 +98,16 @@ export function AnalysisRequestForm() {
     if (errors[name]) setErrors((e) => ({ ...e, [name]: undefined }));
   }
 
+  function choosePays(value: string) {
+    set("pays", value);
+    setDial(dialFor(value));
+  }
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "sending") return;
 
-    const found = validate(fields);
+    const found = validate(fields, noSite);
     setErrors(found);
     const first = Object.keys(found)[0];
     if (first) {
@@ -100,7 +125,15 @@ export function AnalysisRequestForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...fields,
-          site: fields.site.trim() ? normalizeUrl(fields.site.trim()) : "",
+          telephone: fullPhone(dial, fields.telephone),
+          specialite: fields.specialite === "Autre" ? `${OTHER_PREFIX}${fields.autreDomaine.trim()}` : fields.specialite,
+          site: noSite
+            ? fields.site.trim()
+              ? `${NO_SITE} · ${fields.site.trim()}`
+              : NO_SITE
+            : fields.site.trim()
+              ? normalizeUrl(fields.site.trim())
+              : "",
           source: source.current,
           startedAt: startedAt.current,
           website_confirm: honeypot,
@@ -110,11 +143,14 @@ export function AnalysisRequestForm() {
       if (res.ok && json.ok) {
         setStatus("sent");
         setFields(EMPTY);
+        setDial("+");
+        setNoSite(false);
         return;
       }
       if (json.fields?.length) {
         const fromServer: Partial<Record<FieldName, string>> = {};
         for (const f of json.fields) if (f in EMPTY) fromServer[f as FieldName] = MESSAGES[f as FieldName] ?? "Champ à vérifier.";
+        if (fromServer.specialite && fields.specialite === "Autre") fromServer.autreDomaine = MESSAGES.autreDomaine;
         setErrors(fromServer);
       }
       setServerError(json.error ?? "La demande n'a pas pu être transmise.");
@@ -183,21 +219,53 @@ export function AnalysisRequestForm() {
             {errorText("email")}
           </div>
           <div>
-            <label htmlFor="telephone" className="field-label">Téléphone</label>
-            <input {...fieldProps("telephone")} type="tel" autoComplete="tel" onChange={(e) => set("telephone", e.target.value)} />
+            <label htmlFor="pays" className="field-label">Pays *</label>
+            <select {...fieldProps("pays")} required autoComplete="country-name" onChange={(e) => choosePays(e.target.value)}>
+              <option value="" disabled>
+                Choisir
+              </option>
+              <optgroup label="Afrique" className="bg-night">
+                {AFRIQUE.map((c) => (
+                  <option key={c.name} value={c.name} className="bg-night">
+                    {c.name}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Europe" className="bg-night">
+                {EUROPE.map((c) => (
+                  <option key={c.name} value={c.name} className="bg-night">
+                    {c.name}
+                  </option>
+                ))}
+              </optgroup>
+              <option value={OTHER_COUNTRY} className="bg-night">
+                {OTHER_COUNTRY}
+              </option>
+            </select>
+            {errorText("pays")}
           </div>
           <div>
             <label htmlFor="ville" className="field-label">Ville *</label>
-            <input {...fieldProps("ville")} required list="villes" autoComplete="address-level2" onChange={(e) => set("ville", e.target.value)} />
-            <datalist id="villes">
-              {site.cities.map((c) => (
-                <option key={c} value={c} />
-              ))}
-            </datalist>
+            <input {...fieldProps("ville")} required autoComplete="address-level2" onChange={(e) => set("ville", e.target.value)} />
             {errorText("ville")}
           </div>
           <div>
-            <label htmlFor="specialite" className="field-label">Spécialité principale *</label>
+            <label htmlFor="telephone" className="field-label">Téléphone ou WhatsApp</label>
+            <div className="flex gap-2">
+              <label htmlFor="indicatif" className="sr-only">Indicatif</label>
+              <input
+                id="indicatif"
+                value={dial}
+                onChange={(e) => setDial(e.target.value.replace(/[^\d+]/g, "").slice(0, 5))}
+                inputMode="tel"
+                autoComplete="tel-country-code"
+                className="field w-[5.5rem] shrink-0 text-center"
+              />
+              <input {...fieldProps("telephone")} type="tel" autoComplete="tel-national" onChange={(e) => set("telephone", e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="specialite" className="field-label">Domaine principal *</label>
             <select {...fieldProps("specialite")} required onChange={(e) => set("specialite", e.target.value)}>
               <option value="" disabled>
                 Choisir
@@ -209,18 +277,45 @@ export function AnalysisRequestForm() {
               ))}
             </select>
             {errorText("specialite")}
+            {fields.specialite === "Autre" && (
+              <div className="mt-3">
+                <label htmlFor="autreDomaine" className="sr-only">Précisez votre domaine</label>
+                <input
+                  {...fieldProps("autreDomaine")}
+                  required
+                  maxLength={70}
+                  placeholder="Précisez votre domaine"
+                  onChange={(e) => set("autreDomaine", e.target.value)}
+                />
+                {errorText("autreDomaine")}
+              </div>
+            )}
           </div>
-          <div>
-            <label htmlFor="site" className="field-label">Site internet</label>
+          <div className="sm:col-span-2">
+            <label htmlFor="site" className="field-label">
+              {noSite ? "Page Facebook, LinkedIn ou fiche Google (facultatif)" : "Site internet"}
+            </label>
             <input
               {...fieldProps("site")}
               type="text"
               inputMode="url"
-              autoComplete="url"
-              placeholder="www.votre-cabinet.fr"
+              autoComplete={noSite ? "off" : "url"}
+              placeholder={noSite ? "Lien ou nom de la page" : "www.votre-cabinet.com"}
               onChange={(e) => set("site", e.target.value)}
             />
             {errorText("site")}
+            <label className="mt-3 flex cursor-pointer items-center gap-3 text-[14px] text-ivory/75">
+              <input
+                type="checkbox"
+                checked={noSite}
+                onChange={(e) => {
+                  setNoSite(e.target.checked);
+                  setErrors((er) => ({ ...er, site: undefined }));
+                }}
+                className="h-5 w-5 shrink-0 accent-champagne"
+              />
+              Mon cabinet n&apos;a pas encore de site
+            </label>
           </div>
         </div>
 

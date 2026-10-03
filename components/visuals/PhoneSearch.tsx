@@ -4,10 +4,13 @@ import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { EASE } from "@/lib/motion";
 
+/** Des recherches réelles dans leur forme, de pays et de domaines différents. */
 const QUERIES = [
-  { q: "avocat licenciement lyon", time: "22:14", hints: ["avocat licenciement lyon avis", "avocat licenciement lyon gratuit", "avocat prud'hommes lyon"] },
-  { q: "rupture conventionnelle avocat", time: "07:52", hints: ["rupture conventionnelle avocat prix", "rupture conventionnelle négocier", "avocat rupture conventionnelle près de moi"] },
-  { q: "bail commercial litige avocat", time: "13:05", hints: ["bail commercial litige loyer", "avocat bail commercial bordeaux", "résiliation bail commercial"] },
+  { q: "avocat droit des affaires abidjan", time: "22:14", hints: ["avocat droit des affaires abidjan plateau", "cabinet avocat ohada abidjan", "avocat recouvrement créances abidjan"] },
+  { q: "avocat divorce bruxelles", time: "07:52", hints: ["avocat divorce bruxelles avis", "avocat garde des enfants bruxelles", "divorce par consentement mutuel belgique"] },
+  { q: "avocat litige foncier dakar", time: "13:05", hints: ["avocat titre foncier dakar", "litige terrain sénégal que faire", "avocat immobilier dakar"] },
+  { q: "créer une société avocat cotonou", time: "18:40", hints: ["créer une sarl au bénin", "avocat droit des sociétés cotonou", "statuts société avocat bénin"] },
+  { q: "avocat bail commercial genève", time: "09:27", hints: ["avocat bail commercial genève avis", "résiliation bail commercial suisse", "avocat droit du bail genève"] },
 ];
 
 /** Un téléphone, une recherche qui se tape, des suggestions qui arrivent. */

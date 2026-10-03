@@ -94,10 +94,10 @@ function sendConfirmation_(lead) {
   var lines = [
     'Bonjour ' + (lead.prenom || '') + ',',
     '',
-    'Votre demande d'analyse pour ' + (lead.cabinet || 'votre cabinet') + ' est bien arrivée.',
+    "Votre demande d'analyse pour " + (lead.cabinet || 'votre cabinet') + ' est bien arrivée.',
     '',
     'Je vais regarder votre cabinet comme le ferait un prospect : comment il est trouvé, comparé, puis contacté.',
-    'Je reviens vers vous par email avec ce que j'ai observé.',
+    "Je reviens vers vous par email avec ce que j'ai observé.",
     '',
     'Vous pouvez répondre directement à ce message.',
     '',
@@ -106,8 +106,7 @@ function sendConfirmation_(lead) {
   ];
   var options = { name: 'Amos HOUNTONDJI · Legal Growth System' };
   if (replyTo) options.replyTo = replyTo;
-  MailApp.sendEmail(lead.email, 'Votre demande d'analyse est bien reçue', lines.join('
-'), options);
+  MailApp.sendEmail(lead.email, "Votre demande d'analyse est bien reçue", lines.join('\n'), options);
 }
 
 function getSheet_() {

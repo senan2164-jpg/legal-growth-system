@@ -22,7 +22,7 @@ export function Footer() {
         </ul>
       </div>
       <p className="container-x mt-8 text-[12px] text-ivory/35">
-        © {new Date().getFullYear()} {site.name} · {site.founder.displayName}. Les exemples présentés sont fictifs.
+        © {new Date().getFullYear()} {site.name} · {site.founder.displayName}
       </p>
     </footer>
   );

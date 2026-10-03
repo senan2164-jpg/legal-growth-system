@@ -1,5 +1,6 @@
 import { site } from "./site";
 import { pillars } from "./content";
+import { countries } from "./countries";
 
 /** Données structurées : uniquement des informations vraies et vérifiables. */
 export function buildJsonLd() {
@@ -16,6 +17,7 @@ export function buildJsonLd() {
         givenName: site.founder.givenName,
         familyName: site.founder.familyName,
         jobTitle: site.founder.role,
+        ...(site.founder.photo ? { image: `${site.url}${site.founder.photo}` } : {}),
         worksFor: { "@id": org },
       },
       {
@@ -28,7 +30,7 @@ export function buildJsonLd() {
         founder: { "@id": founder },
         description:
           "Méthode d'analyse et de croissance digitale conçue pour les cabinets d'avocats : visibilité, acquisition, conversion et suivi.",
-        areaServed: { "@type": "Country", name: "France" },
+        areaServed: countries.map((c) => ({ "@type": "Country", name: c.name })),
         knowsAbout: [
           "Marketing digital pour cabinets d'avocats",
           "Référencement naturel",
@@ -55,7 +57,7 @@ export function buildJsonLd() {
           "Analyse de la visibilité, de la concurrence et du parcours de contact d'un cabinet d'avocats, à partir de données publiques observées, puis recommandations priorisées.",
         provider: { "@id": org },
         audience: { "@type": "BusinessAudience", audienceType: "Cabinets d'avocats" },
-        areaServed: { "@type": "Country", name: "France" },
+        areaServed: countries.map((c) => ({ "@type": "Country", name: c.name })),
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "Les quatre volets de Legal Growth System",

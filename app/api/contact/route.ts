@@ -64,7 +64,8 @@ export async function POST(req: Request) {
     const res = await fetch(scriptUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ secret, lead }),
+      // Le pays est joint à la ville : le script Google et la feuille restent inchangés.
+      body: JSON.stringify({ secret, lead: { ...lead, ville: `${lead.ville}, ${lead.pays}` } }),
       redirect: "follow",
       cache: "no-store",
       signal: AbortSignal.timeout(15_000),

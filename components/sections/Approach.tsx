@@ -6,7 +6,7 @@ import { Reveal } from "../ui/Reveal";
 const STAGES = [
   { name: "Visibilité", q: "Vous trouve-t-il ?" },
   { name: "Comparaison", q: "Vous préfère-t-il ?" },
-  { name: "Contact", q: "Vous appelle-t-il ?" },
+  { name: "Contact", q: "Vous contacte-t-il ?" },
 ];
 
 export function Approach() {

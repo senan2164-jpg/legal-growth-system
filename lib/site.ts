@@ -10,10 +10,12 @@ export const site = {
     givenName: "Amos",
     familyName: "HOUNTONDJI",
     role: "Consultant en stratégie de croissance digitale et acquisition",
+    /** Photo de profil, placée dans /public. `null` : le monogramme « HA » est affiché à la place. */
+    photo: "/amos.jpg" as string | null,
   },
   title: "Legal Growth System | Croissance digitale des cabinets d'avocats",
   description:
-    "Développer la visibilité et l'acquisition des cabinets d'avocats. Nous regardons votre cabinet comme le ferait un prospect, puis nous cherchons ce qui mérite d'être amélioré. Par HOUNTONDJI AMOS.",
+    "Développer la visibilité et l'acquisition des cabinets d'avocats de l'espace francophone, en Afrique et en Europe. Nous regardons votre cabinet comme le ferait un prospect, puis nous cherchons ce qui mérite d'être amélioré. Par HOUNTONDJI AMOS.",
   keywords: [
     "marketing digital avocat",
     "acquisition clients avocat",
@@ -23,8 +25,11 @@ export const site = {
     "acquisition cabinet avocat",
     "GEO avocat",
     "automatisation cabinet avocat",
+    "marketing digital avocat Afrique",
+    "visibilité cabinet avocat Afrique francophone",
+    "marketing avocat Belgique",
+    "marketing avocat Suisse",
   ],
-  cities: ["Paris", "Lyon", "Marseille", "Bordeaux", "Lille", "Toulouse", "Nantes", "Strasbourg", "Nice"],
 };
 
 export const nav = [

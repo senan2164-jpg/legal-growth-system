@@ -29,7 +29,7 @@ export default function Page() {
       <h2>Vos droits</h2>
       <p>
         Vous pouvez demander l&apos;accès à vos données, leur rectification ou leur suppression en écrivant à{" "}
-        {site.email ?? "[adresse email à compléter]"}. Vous pouvez également saisir la CNIL.
+        {site.email ?? "[adresse email à compléter]"}. Vous pouvez également saisir l&apos;autorité de protection des données de votre pays (par exemple la CNIL en France, l&apos;APD en Belgique, la CDP au Sénégal ou l&apos;APDP au Bénin).
       </p>
       <h2>Cookies</h2>
       <p>Ce site n&apos;utilise ni cookie publicitaire ni outil de mesure d&apos;audience à ce jour.</p>

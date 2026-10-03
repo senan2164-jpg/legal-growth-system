@@ -7,9 +7,9 @@ import { useSequence } from "@/lib/useSequence";
 const STEPS = ["Recherche", "Résultats", "Comparaison", "Cabinet choisi"];
 
 const RESULTS = [
-  { name: "Cabinet A", rating: 4.8, reviews: 112, tags: ["Licenciement", "Lyon 3e"], pick: true },
-  { name: "Votre cabinet", rating: null, reviews: 0, tags: ["Droit du travail"], you: true },
-  { name: "Cabinet B", rating: 4.2, reviews: 37, tags: ["Prud'hommes"] },
+  { name: "Cabinet A", rating: 4.8, reviews: 64, tags: ["Droit des affaires", "WhatsApp"], pick: true },
+  { name: "Votre cabinet", rating: null, reviews: 0, tags: ["Cabinet d'avocats"], you: true },
+  { name: "Cabinet B", rating: 4.2, reviews: 19, tags: ["Sociétés"] },
 ];
 
 function Stars({ value }: { value: number }) {
@@ -53,7 +53,7 @@ export function ResultsCompare() {
       <div aria-hidden="true" className="rounded-[26px] border border-ink/10 bg-white p-4 shadow-paper sm:p-6">
         <div className="flex items-center gap-2.5 rounded-full border border-ink/15 px-4 py-3 text-[14px] text-ink">
           <Search className="h-4 w-4 text-ink/45" />
-          avocat licenciement lyon
+          avocat droit des affaires abidjan
         </div>
 
         <ul className="mt-4 min-h-[288px] space-y-2.5">

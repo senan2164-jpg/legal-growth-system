@@ -17,7 +17,7 @@ export function Contact() {
 
         <div id="analyse" className="mx-auto mt-16 max-w-2xl md:mt-20">
           <AnalysisRequestForm />
-          <p className="mt-5 text-center text-[13px] text-ivory/45">Réponse personnelle par email. Sans engagement.</p>
+          <p className="mt-5 text-center text-[13px] text-ivory/45">Réponse personnelle par email, sans engagement. Dans le respect des règles de votre barreau.</p>
         </div>
       </div>
     </section>

@@ -11,6 +11,7 @@ export function Hero() {
       />
 
       <div className="container-x relative text-center">
+        <p className="rise mb-8 text-[13px] text-ivory/50">Pour les cabinets d&apos;avocats de l&apos;espace francophone</p>
         <h1 className="display-xl mx-auto max-w-[15ch] text-ivory md:max-w-none md:!text-[clamp(3.5rem,5.6vw,5.6rem)]">
           <span className="rise block">
             Le prochain dossier <br className="hidden md:block" />

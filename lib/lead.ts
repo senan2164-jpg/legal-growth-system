@@ -1,4 +1,5 @@
 import { specialtyOptions } from "./content";
+import { countryNames } from "./countries";
 
 /** Demande d'analyse, telle qu'envoyée au script Google Apps Script. */
 export type AnalysisRequest = {
@@ -8,6 +9,7 @@ export type AnalysisRequest = {
   email: string;
   telephone: string;
   ville: string;
+  pays: string;
   specialite: string;
   site: string;
   taille: string;
@@ -24,11 +26,17 @@ const MAX: Record<keyof Omit<AnalysisRequest, "dossiers">, number> = {
   email: 160,
   telephone: 40,
   ville: 80,
+  pays: 60,
   specialite: 80,
   site: 300,
   taille: 20,
   source: 200,
 };
+
+/** Valeur envoyée quand le cabinet n'a pas de site, éventuellement suivie d'une autre présence en ligne. */
+export const NO_SITE = "Pas de site";
+/** Préfixe d'un domaine saisi librement après avoir choisi « Autre ». */
+export const OTHER_PREFIX = "Autre : ";
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -61,6 +69,7 @@ export function parseAnalysisRequest(input: Record<string, unknown>):
     email: clean(input.email, MAX.email).toLowerCase(),
     telephone: clean(input.telephone, MAX.telephone),
     ville: clean(input.ville, MAX.ville),
+    pays: clean(input.pays, MAX.pays),
     specialite: clean(input.specialite, MAX.specialite),
     site: clean(input.site, MAX.site),
     taille: clean(input.taille, MAX.taille),
@@ -76,11 +85,15 @@ export function parseAnalysisRequest(input: Record<string, unknown>):
   const fields: string[] = [];
   for (const key of ["prenom", "nom", "cabinet", "ville"] as const) if (!data[key]) fields.push(key);
   if (!EMAIL_PATTERN.test(data.email)) fields.push("email");
-  if (!specialtyOptions.includes(data.specialite)) fields.push("specialite");
+  if (!countryNames.includes(data.pays)) fields.push("pays");
+  if (!specialtyOptions.includes(data.specialite) && !(data.specialite.startsWith(OTHER_PREFIX) && data.specialite.length > OTHER_PREFIX.length))
+    fields.push("specialite");
   if (data.taille && !(LAWYER_COUNTS as readonly string[]).includes(data.taille)) fields.push("taille");
-  const site = normalizeUrl(data.site);
-  if (site === null) fields.push("site");
-  else data.site = site;
+  if (!data.site.startsWith(NO_SITE)) {
+    const site = normalizeUrl(data.site);
+    if (site === null) fields.push("site");
+    else data.site = site;
+  }
 
   return fields.length ? { ok: false, fields } : { ok: true, data };
 }

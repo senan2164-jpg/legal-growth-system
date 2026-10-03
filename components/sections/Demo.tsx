@@ -9,17 +9,17 @@ import { Reveal } from "../ui/Reveal";
 const FINDINGS = [
   {
     where: "Carte Google",
-    fact: "Absent des résultats locaux sur « avocat licenciement Lyon ».",
+    fact: "Absent des résultats locaux sur « avocat droit des affaires Dakar ».",
     pin: { top: "18%", left: "88%" },
   },
   {
     where: "Pages du site",
-    fact: "Aucune page sur la rupture conventionnelle, pourtant recherchée.",
+    fact: "Aucune page sur la création de société, pourtant recherchée.",
     pin: { top: "67%", left: "88%" },
   },
   {
     where: "Mobile",
-    fact: "Le téléphone n'apparaît qu'en bas de page.",
+    fact: "Ni téléphone ni WhatsApp visibles en haut de page.",
     pin: { top: "90%", left: "88%" },
   },
 ];
@@ -48,7 +48,7 @@ export function Demo() {
           {/* Le site du cabinet fictif, annoté */}
           <div aria-hidden="true" className="relative mx-auto w-full max-w-[340px]">
             <div className="overflow-hidden rounded-[30px] border border-ink/10 bg-white shadow-paper">
-              <div className="border-b border-ink/10 px-4 py-3 text-center text-[11px] text-ink/40">cabinet-exemple.fr</div>
+              <div className="border-b border-ink/10 px-4 py-3 text-center text-[11px] text-ink/40">cabinet-exemple.com</div>
               <div className="space-y-5 p-5">
                 <div className="flex items-center gap-3 rounded-xl bg-ink/[.04] p-3">
                   <MapPin className="h-4 w-4 text-ink/30" />
@@ -59,7 +59,7 @@ export function Demo() {
                 </div>
                 <div>
                   <p className="font-serif text-[24px] leading-tight">Cabinet Exemple</p>
-                  <p className="text-[12px] text-ink/50">Droit du travail · Lyon</p>
+                  <p className="text-[12px] text-ink/50">Droit des affaires · Dakar</p>
                 </div>
                 <div className="space-y-2">
                   <Line w="100%" />
@@ -67,13 +67,13 @@ export function Demo() {
                   <Line w="70%" />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  {["Licenciement", "Prud'hommes"].map((t) => (
+                  {["Contentieux", "Recouvrement"].map((t) => (
                     <span key={t} className="rounded-lg border border-ink/10 px-2.5 py-2 text-[11.5px] text-ink/60">
                       {t}
                     </span>
                   ))}
                   <span className="col-span-2 rounded-lg border border-dashed border-ink/20 px-2.5 py-2 text-[11.5px] text-ink/30">
-                    Rupture conventionnelle ?
+                    Création de société ?
                   </span>
                 </div>
                 <div className="space-y-2">
@@ -81,7 +81,7 @@ export function Demo() {
                   <Line w="80%" />
                 </div>
                 <div className="flex items-center justify-center gap-2 rounded-full bg-ink py-3 text-[12px] text-ivory/80">
-                  <Phone className="h-3.5 w-3.5" /> 04 00 00 00 00
+                  <Phone className="h-3.5 w-3.5" /> +221 00 000 00 00
                 </div>
               </div>
             </div>

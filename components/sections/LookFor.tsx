@@ -98,7 +98,7 @@ const ITEMS = [
   { name: "Visibilité", line: "Où vous apparaissez.", Glyph: VisibilityGlyph },
   { name: "Demande", line: "Ce qui est recherché.", Glyph: DemandGlyph },
   { name: "Concurrence", line: "Qui apparaît à côté.", Glyph: CompetitionGlyph },
-  { name: "Conversion", line: "Ce qui freine l'appel.", Glyph: ConversionGlyph },
+  { name: "Conversion", line: "Ce qui freine le contact.", Glyph: ConversionGlyph },
 ];
 
 export function LookFor() {
